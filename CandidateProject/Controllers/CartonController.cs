@@ -240,11 +240,15 @@ namespace CandidateProject.Controllers
 
         public ActionResult RemoveEquipmentOnCarton([Bind(Include = "CartonId,EquipmentId")] RemoveEquipmentViewModel removeEquipmentViewModel)
         {
-            return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            if (ModelState.IsValid)
-            {
-                //Remove code here
-            }
+            //return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            using (var context = new CartonContext())
+
+                if (ModelState.IsValid)
+                {
+                    var itemToRemove = context.CartonDetails.SingleOrDefault(x => x.CartonId == removeEquipmentViewModel.CartonId && x.EquipmentId == removeEquipmentViewModel.EquipmentId);
+                    context.CartonDetails.Remove(itemToRemove);
+                    context.SaveChanges();
+                }
             return RedirectToAction("ViewCartonEquipment", new { id = removeEquipmentViewModel.CartonId });
         }
     }
