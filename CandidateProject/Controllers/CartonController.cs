@@ -22,16 +22,12 @@ namespace CandidateProject.Controllers
                     Id = c.Id,
                     CartonNumber = c.CartonNumber,
                     NoOfItems = db.CartonDetails.Where(d => d.CartonId == c.Id).ToList().Count
-
                 })
                 .ToList();
 
             //var ItemCount = db.CartonDetails.Where(p => p.CartonId == cartonViewModel.Id).ToList().Count;
 
-
-
-
-            return View(cartons);
+        return View(cartons);
         }
 
         // GET: Carton/Details/5
@@ -201,7 +197,7 @@ namespace CandidateProject.Controllers
                 return View(carton);
         }
 
-        public ActionResult AddEquipmentToCarton([Bind(Include = "CartonId,EquipmentId")] AddEquipmentViewModel addEquipmentViewModel)
+        public ActionResult AddEquipmentToCarton([Bind(Include = "CartonId,EquipmentId,NoOfItems")] AddEquipmentViewModel addEquipmentViewModel)
         {
             if (ModelState.IsValid)
             {
@@ -284,5 +280,24 @@ namespace CandidateProject.Controllers
                 }
             return RedirectToAction("ViewCartonEquipment", new { id = removeEquipmentViewModel.CartonId });
         }
+
+        public ActionResult RemoveAllEquipmentOnCarton([Bind(Include = "CartonId")] RemoveEquipmentViewModel removeEquipmentViewModel)
+        {
+            //return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            using (var context = new CartonContext())
+
+                if (ModelState.IsValid)
+                {
+                    var parent = context.Cartons.Include(p => p.CartonDetails)
+                        .SingleOrDefault(p => p.Id == removeEquipmentViewModel.CartonId);
+
+                    foreach (var child in parent.CartonDetails.ToList())
+                        context.CartonDetails.Remove(child);
+                        context.SaveChanges();
+                }
+
+                return RedirectToAction("ViewCartonEquipment", new { id = removeEquipmentViewModel.CartonId });
+        }
+
     }
 }

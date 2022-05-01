@@ -4,7 +4,7 @@
     ViewBag.Title = "View Carton Equipment";
 }
 
-<h2>View Carton Equipment</h2>
+<h2>View Carton Equipment @Html.ActionLink("Remove All Items", "RemoveAllEquipmentOnCarton", new { cartonId = Model.CartonId})</h2>
 
 <h3>@Html.DisplayFor(model => model.CartonNumber)</h3>
 <table class="table">
