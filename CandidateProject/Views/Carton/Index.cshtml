@@ -14,11 +14,17 @@
         <th>
             @Html.DisplayNameFor(model => model.CartonNumber)
         </th>
-        <th></th>
+        <td>
+            @Html.DisplayNameFor(model => model.CartonNumber)
+        </td>
+      
     </tr>
 
 @foreach (var item in Model) {
     <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.CartonNumber)
+        </td>
         <td>
             @Html.DisplayFor(modelItem => item.CartonNumber)
         </td>

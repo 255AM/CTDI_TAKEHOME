@@ -21,5 +21,7 @@ namespace CandidateProject.EntityModels
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public ICollection<CartonDetail> CartonDetails { get; set; }
+
+        public int NoOfItems { get; set; }
     }
 }

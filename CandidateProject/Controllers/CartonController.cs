@@ -163,9 +163,7 @@ namespace CandidateProject.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-                //using (var context = new CartonContext())
-            
-
+                
             var carton = db.Cartons
                 .Where(c => c.Id == id)
                 .Select(c => new CartonDetailsViewModel()
@@ -225,11 +223,12 @@ namespace CandidateProject.Controllers
                 {
                     carton.CartonDetails.Add(detail);
                     db.SaveChanges();
+                    TempData["Warning"] = "";
                 }
 
                 else
                 {
-                    TempData["msg"] = "<script>alert('Change succesfully');</script>";
+                    TempData["Warning"] = "Container Is Full. Item Not Added";
                 }
                 
             }
