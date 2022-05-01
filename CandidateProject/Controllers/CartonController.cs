@@ -163,6 +163,8 @@ namespace CandidateProject.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
+                //using (var context = new CartonContext())
+            
 
             var carton = db.Cartons
                 .Where(c => c.Id == id)
@@ -179,19 +181,18 @@ namespace CandidateProject.Controllers
             }
 
             var equipment = db.Equipments
-                .Where(e => !db.CartonDetails
-                    .Select(cd => cd.EquipmentId)
-                    .Contains(e.Id) )
-                     .Select(e => new EquipmentViewModel()
-                {
-                    Id = e.Id,
-                    ModelType = e.ModelType.TypeName,
-                    SerialNumber = e.SerialNumber
-                })
-                .ToList();
-            
-            carton.Equipment = equipment;
-            return View(carton);
+                    .Where(e => !db.CartonDetails
+                        .Select(cd => cd.EquipmentId)
+                        .Contains(e.Id))
+                         .Select(e => new EquipmentViewModel()
+                         {
+                             Id = e.Id,
+                             ModelType = e.ModelType.TypeName,
+                             SerialNumber = e.SerialNumber
+                         })
+                    .ToList();
+                carton.Equipment = equipment;
+                return View(carton);
         }
 
         public ActionResult AddEquipmentToCarton([Bind(Include = "CartonId,EquipmentId")] AddEquipmentViewModel addEquipmentViewModel)
@@ -218,8 +219,19 @@ namespace CandidateProject.Controllers
                     Carton = carton,
                     Equipment = equipment
                 };
-                carton.CartonDetails.Add(detail);
-                db.SaveChanges();
+
+                var ItemCount = db.CartonDetails.Where(p => p.CartonId == addEquipmentViewModel.CartonId).ToList().Count;
+                if (ItemCount < 10)
+                {
+                    carton.CartonDetails.Add(detail);
+                    db.SaveChanges();
+                }
+
+                else
+                {
+                    TempData["msg"] = "<script>alert('Change succesfully');</script>";
+                }
+                
             }
             return RedirectToAction("AddEquipment", new { id = addEquipmentViewModel.CartonId });
         }
