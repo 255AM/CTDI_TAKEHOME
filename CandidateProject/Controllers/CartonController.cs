@@ -16,12 +16,20 @@ namespace CandidateProject.Controllers
         public ActionResult Index()
         {
             var cartons = db.Cartons
+                .Include(c => c.CartonDetails)
                 .Select(c => new CartonViewModel()
                 {
                     Id = c.Id,
-                    CartonNumber = c.CartonNumber
+                    CartonNumber = c.CartonNumber,
+                    NoOfItems = db.CartonDetails.Where(d => d.CartonId == c.Id).ToList().Count
+
                 })
                 .ToList();
+
+            //var ItemCount = db.CartonDetails.Where(p => p.CartonId == cartonViewModel.Id).ToList().Count;
+
+
+
 
             return View(cartons);
         }
