@@ -4,7 +4,18 @@
     ViewBag.Title = "View Carton Equipment";
 }
 
-<h2>View Carton Equipment @Html.ActionLink("Remove All Items", "RemoveAllEquipmentOnCarton", new { cartonId = Model.CartonId})</h2>
+<table class="table">
+    <tr>
+        <td>
+            <h2>View Carton Equipment </h2>
+        </td>
+        <td>
+            
+        </td>
+</tr>
+    
+</table>
+
 
 <h3>@Html.DisplayFor(model => model.CartonNumber)</h3>
 <table class="table">
@@ -16,6 +27,7 @@
             @Html.DisplayNameFor(model => model.Equipment.FirstOrDefault().SerialNumber)
         </th>
         <th>
+            @Html.ActionLink("Remove All Items", "RemoveAllEquipmentOnCarton", new { cartonId = Model.CartonId })</h3>
         </th>        
     </tr>
 

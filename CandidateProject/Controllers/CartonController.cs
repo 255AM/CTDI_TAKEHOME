@@ -15,6 +15,8 @@ namespace CandidateProject.Controllers
         // GET: Carton
         public ActionResult Index()
         {
+        // added a display of number of items in cart to index screen
+
             var cartons = db.Cartons
                 .Include(c => c.CartonDetails)
                 .Select(c => new CartonViewModel()
@@ -24,9 +26,6 @@ namespace CandidateProject.Controllers
                     NoOfItems = db.CartonDetails.Where(d => d.CartonId == c.Id).ToList().Count
                 })
                 .ToList();
-
-            //var ItemCount = db.CartonDetails.Where(p => p.CartonId == cartonViewModel.Id).ToList().Count;
-
         return View(cartons);
         }
 
@@ -136,13 +135,14 @@ namespace CandidateProject.Controllers
         {
             using (var context = new CartonContext())
             {
+                //removing mentions of parent to allow deletion of carton with items
 
                 var parent = context.Cartons.Include(p => p.CartonDetails)
-                        .SingleOrDefault(p => p.Id == id);
+                    .SingleOrDefault(p => p.Id == id);
 
                 foreach (var child in parent.CartonDetails.ToList())
                     context.CartonDetails.Remove(child);
-                context.SaveChanges();
+                    context.SaveChanges();
             }
             Carton carton = db.Cartons.Find(id);
             db.Cartons.Remove(carton);
@@ -181,6 +181,8 @@ namespace CandidateProject.Controllers
             {
                 return HttpNotFound();
             }
+
+            //added code to dissallow the addition of one item to multiple cartons
 
             var equipment = db.Equipments
                     .Where(e => !db.CartonDetails
@@ -221,6 +223,8 @@ namespace CandidateProject.Controllers
                     Carton = carton,
                     Equipment = equipment
                 };
+
+                //added logic to prevent adding > 10 items to a carton. User is alerted when attempting to do so
 
                 var ItemCount = db.CartonDetails.Where(p => p.CartonId == addEquipmentViewModel.CartonId).ToList().Count;
                 if (ItemCount < 10)
@@ -269,7 +273,7 @@ namespace CandidateProject.Controllers
 
         public ActionResult RemoveEquipmentOnCarton([Bind(Include = "CartonId,EquipmentId")] RemoveEquipmentViewModel removeEquipmentViewModel)
         {
-            //return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            //added remove functionality to allow the removal of an item from the container;
             using (var context = new CartonContext())
 
                 if (ModelState.IsValid)
@@ -283,7 +287,8 @@ namespace CandidateProject.Controllers
 
         public ActionResult RemoveAllEquipmentOnCarton([Bind(Include = "CartonId")] RemoveEquipmentViewModel removeEquipmentViewModel)
         {
-            //return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            //added a quick removal of all items in cart
+
             using (var context = new CartonContext())
 
                 if (ModelState.IsValid)
