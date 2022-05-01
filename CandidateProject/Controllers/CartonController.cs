@@ -130,9 +130,21 @@ namespace CandidateProject.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
+            using (var context = new CartonContext())
+            {
+
+                var parent = context.Cartons.Include(p => p.CartonDetails)
+                        .SingleOrDefault(p => p.Id == id);
+
+                foreach (var child in parent.CartonDetails.ToList())
+                    context.CartonDetails.Remove(child);
+                context.SaveChanges();
+            }
             Carton carton = db.Cartons.Find(id);
             db.Cartons.Remove(carton);
             db.SaveChanges();
+
+
             return RedirectToAction("Index");
         }
 
