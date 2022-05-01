@@ -179,8 +179,10 @@ namespace CandidateProject.Controllers
             }
 
             var equipment = db.Equipments
-                .Where(e => !db.CartonDetails.Where(cd => cd.CartonId == id).Select(cd => cd.EquipmentId).Contains(e.Id) )
-                .Select(e => new EquipmentViewModel()
+                .Where(e => !db.CartonDetails
+                    .Select(cd => cd.EquipmentId)
+                    .Contains(e.Id) )
+                     .Select(e => new EquipmentViewModel()
                 {
                     Id = e.Id,
                     ModelType = e.ModelType.TypeName,
